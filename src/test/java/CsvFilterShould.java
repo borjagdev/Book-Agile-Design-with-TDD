@@ -2,6 +2,7 @@ import CsvFilter.CsvFilter;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,9 +24,7 @@ class CsvFilterShould {
     @Test
     void allow_for_correct_lines_only() {
         String invoiceLine = "1,02/05/2019,1000,810,19,,ACER Laptop,B76430134,";
-        List<String> csvContent = new ArrayList<>();
-        csvContent.add(headerLine);
-        csvContent.add(invoiceLine);
+        List<String> csvContent = Arrays.asList(headerLine, invoiceLine);
 
         List<String> result = CsvFilter.filter(csvContent);
 
@@ -35,43 +34,28 @@ class CsvFilterShould {
     @Test
     void exclude_lines_with_both_tax_fields_populated_as_they_are_exclusive() {
         String invoiceLine = "1,02/05/2019,1000,810,19,8,ACER Laptop,B76430134,";
-        List<String> csvContent = new ArrayList<>();
-        csvContent.add(headerLine);
-        csvContent.add(invoiceLine);
-        List<String> expectedResult = new ArrayList<>();
-        expectedResult.add(headerLine);
 
-        List<String> result = CsvFilter.filter(csvContent);
+        List<String> result = CsvFilter.filter(Arrays.asList(headerLine, invoiceLine));
 
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isEqualTo(Arrays.asList(headerLine));
     }
 
     @Test
     void exclude_lines_with_both_tax_fields_empty_as_one_is_required() {
         String invoiceLine = "1,02/05/2019,1000,810,,,ACER Laptop,B76430134,";
-        List<String> csvContent = new ArrayList<>();
-        csvContent.add(headerLine);
-        csvContent.add(invoiceLine);
-        List<String> expectedResult = new ArrayList<>();
-        expectedResult.add(headerLine);
 
-        List<String> result = CsvFilter.filter(csvContent);
+        List<String> result = CsvFilter.filter(Arrays.asList(headerLine, invoiceLine));
 
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isEqualTo(Arrays.asList(headerLine));
     }
 
     @Test
     void exclude_lines_with_non_decimal_tax_fields() {
         String invoiceLine = "1,02/05/2019,1000,810,NON_DECIMAL,,ACER Laptop,B76430134,";
-        List<String> csvContent = new ArrayList<>();
-        csvContent.add(headerLine);
-        csvContent.add(invoiceLine);
-        List<String> expectedResult = new ArrayList<>();
-        expectedResult.add(headerLine);
 
-        List<String> result = CsvFilter.filter(csvContent);
+        List<String> result = CsvFilter.filter(Arrays.asList(headerLine, invoiceLine));
 
-        assertThat(result).isEqualTo(expectedResult);
+        assertThat(result).isEqualTo(Arrays.asList(headerLine));
     }
 
 }
