@@ -18,11 +18,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class CsvFilterShould {
 
+    String headerLine = "Num_factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+
     @Test
     void allow_for_correct_lines_only() {
-        List<String> csvContent = new ArrayList<>();
-        String headerLine = "Num_factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
         String invoiceLine = "1,02/05/2019,1000,810,19,,ACER Laptop,B76430134,";
+        List<String> csvContent = new ArrayList<>();
         csvContent.add(headerLine);
         csvContent.add(invoiceLine);
 
@@ -33,9 +34,8 @@ class CsvFilterShould {
 
     @Test
     void exclude_lines_with_both_tax_fields_populated_as_they_are_exclusive() {
-        List<String> csvContent = new ArrayList<>();
-        String headerLine = "Num_factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
         String invoiceLine = "1,02/05/2019,1000,810,19,8,ACER Laptop,B76430134,";
+        List<String> csvContent = new ArrayList<>();
         csvContent.add(headerLine);
         csvContent.add(invoiceLine);
         List<String> expectedResult = new ArrayList<>();
@@ -48,9 +48,8 @@ class CsvFilterShould {
 
     @Test
     void exclude_lines_with_both_tax_fields_empty_as_one_is_required() {
-        List<String> csvContent = new ArrayList<>();
-        String headerLine = "Num_factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
         String invoiceLine = "1,02/05/2019,1000,810,,,ACER Laptop,B76430134,";
+        List<String> csvContent = new ArrayList<>();
         csvContent.add(headerLine);
         csvContent.add(invoiceLine);
         List<String> expectedResult = new ArrayList<>();
