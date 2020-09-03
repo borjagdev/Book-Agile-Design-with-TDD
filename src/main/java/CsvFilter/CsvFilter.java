@@ -24,8 +24,8 @@ public class CsvFilter {
 
     private static boolean taxFieldsAreMutuallyExclusive(String ivaField, String igicField) {
         final String NUMERIC_REGEX = "-?\\d+(\\.\\d+)?";
-        return (ivaField.matches(NUMERIC_REGEX) || igicField.matches(NUMERIC_REGEX)) &&
-                !(ivaField.matches(NUMERIC_REGEX) && igicField.matches(NUMERIC_REGEX));
+        return (ivaField.isEmpty() || igicField.isEmpty()) &&
+                (ivaField.matches(NUMERIC_REGEX) || igicField.matches(NUMERIC_REGEX));
     }
 
 }
