@@ -5,10 +5,8 @@ import java.util.List;
 
 public class CsvFilter {
 
-    private static final Integer IVA_FIELD_INDEX = 4;
-    private static final Integer IGIC_FIELD_INDEX = 5;
-
-    private CsvFilter() {}
+    private CsvFilter() {
+    }
 
     public static List<String> filter(List<String> originalContent) {
         List<String> filteredContent = new ArrayList<>();
@@ -21,8 +19,13 @@ public class CsvFilter {
     }
 
     private static boolean taxFieldsAreMutuallyExclusive(String[] invoiceElements) {
-        return (invoiceElements[IVA_FIELD_INDEX].isEmpty() || invoiceElements[IGIC_FIELD_INDEX].isEmpty()) &&
-                !(invoiceElements[IVA_FIELD_INDEX].isEmpty() && invoiceElements[IGIC_FIELD_INDEX].isEmpty());
+        final int IVA_FIELD_INDEX = 4;
+        final int IGIC_FIELD_INDEX = 5;
+        final String NUMERIC_REGEX = "-?\\d+(\\.\\d+)?";
+        return (invoiceElements[IVA_FIELD_INDEX].matches(NUMERIC_REGEX) ||
+                invoiceElements[IGIC_FIELD_INDEX].matches(NUMERIC_REGEX)) &&
+                !(invoiceElements[IVA_FIELD_INDEX].matches(NUMERIC_REGEX) &&
+                        invoiceElements[IGIC_FIELD_INDEX].matches(NUMERIC_REGEX));
     }
 
 }

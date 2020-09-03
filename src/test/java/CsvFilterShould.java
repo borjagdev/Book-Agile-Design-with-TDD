@@ -60,4 +60,18 @@ class CsvFilterShould {
         assertThat(result).isEqualTo(expectedResult);
     }
 
+    @Test
+    void exclude_lines_with_non_decimal_tax_fields() {
+        String invoiceLine = "1,02/05/2019,1000,810,NON_DECIMAL,,ACER Laptop,B76430134,";
+        List<String> csvContent = new ArrayList<>();
+        csvContent.add(headerLine);
+        csvContent.add(invoiceLine);
+        List<String> expectedResult = new ArrayList<>();
+        expectedResult.add(headerLine);
+
+        List<String> result = CsvFilter.filter(csvContent);
+
+        assertThat(result).isEqualTo(expectedResult);
+    }
+
 }
