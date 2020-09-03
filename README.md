@@ -6,8 +6,5 @@ Read the book and support the writer!
 All the code is written in Java, tested with JUnit's AssertJ library.
 Generated as a Maven project.
 
-## What is Test-Driven Development?
 * [Code](/src/main/java/CsvFilter.java)
-* [Tests for the code](/src/test/java/CsvFilterShould.java)
-
-
+* [Tests](/src/test/java/CsvFilterShould.java)

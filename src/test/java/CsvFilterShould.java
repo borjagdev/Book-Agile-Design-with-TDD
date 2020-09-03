@@ -1,20 +1,19 @@
 import CsvFilter.CsvFilter;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /* TODO:
- - A file with a single invoice where everything is correct should output the same line
- - A file with a single invoice where IVA and IGIC (exclusive taxes) are filled should delete the line
- - A file with a single invoice where the net cost is wrong calculated should delete the line
- - A file with a single invoice where CIF and NIF are filled should delete the line
- - A file with just 1 line is not valid because it has no header
- - If the invoice number is repeated, all the lines where it appears should be deleted
- - An empty or null list should output an empty list
+ - A file with a single invoice where everything is correct should output the same line - CHECK
+ - A file with a single invoice where IVA and IGIC (exclusive taxes) are filled should delete the line - CHECK
+ - A file with a single invoice where the net cost is wrongly calculated should delete the line -
+ - A file with a single invoice where CIF and NIF are filled should delete the line -
+ - A file with just 1 line is not valid because it has no header -
+ - If the invoice number is repeated, all the lines where it appears should be deleted -
+ - An empty or null list should output an empty list -
 */
 
 class CsvFilterShould {
