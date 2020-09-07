@@ -6,6 +6,7 @@ import java.util.List;
 
 public class CsvFilter {
 
+    private static final int INVOICE_NUMBER_FIELD_INDEX = 0;
     private static final int LIST_PRICE_FIELD_INDEX = 2;
     private static final int NET_PRICE_INDEX = 3;
     private static final int IVA_FIELD_INDEX = 4;
@@ -22,9 +23,11 @@ public class CsvFilter {
         }
         List<String> filteredContent = new ArrayList<>();
         filteredContent.add(originalContent.get(0));
+        List<String> usedInvoiceNumbers = new ArrayList<>();
         for (int i = 1; i < originalContent.size(); i++) {
             String[] invoiceElements = originalContent.get(i).split(",");
             if (invoiceHasEnoughPopulatedFields(invoiceElements)) {
+                String invoiceNumberField = invoiceElements[INVOICE_NUMBER_FIELD_INDEX];
                 String listPriceField = invoiceElements[LIST_PRICE_FIELD_INDEX];
                 String netPriceField = invoiceElements[NET_PRICE_INDEX];
                 String ivaField = invoiceElements[IVA_FIELD_INDEX];
@@ -37,10 +40,12 @@ public class CsvFilter {
                 if (nifFieldIsNotEmpty(invoiceElements)) {
                     nifField = invoiceElements[NIF_FIELD_INDEX];
                 }
-                if (taxFieldsAreMutuallyExclusive(ivaField, igicField) &&
+                if (!usedInvoiceNumbers.contains(invoiceNumberField) &&
+                        taxFieldsAreMutuallyExclusive(ivaField, igicField) &&
                         netPriceIsCorrect(listPriceField, netPriceField, getAppliedTax(ivaField, igicField)) &&
                         idFieldsAreMutuallyExclusive(cifField, nifField)) {
                     filteredContent.add(originalContent.get(i));
+                    usedInvoiceNumbers.add(invoiceNumberField);
                 }
             }
         }

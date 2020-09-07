@@ -119,4 +119,15 @@ class CsvFilterShould {
         assertThat(result).isEqualTo(fileContent);
     }
 
+    @Test
+    void exclude_lines_with_repeated_invoice_number() {
+        int numberOfValidLines = 3;
+        int numberOfRepeatedLines = 5;
+        List<String> fileContent = multilineFileWith(numberOfValidLines, numberOfRepeatedLines);
+
+        List<String> result = CsvFilter.filter(fileContent);
+
+        assertThat(result.size()).isEqualTo(1 + numberOfValidLines);
+    }
+
 }

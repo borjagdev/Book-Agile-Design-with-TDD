@@ -43,8 +43,20 @@ public class TestData {
     public static List<String> multilineValidFile() {
         ArrayList<String> fileContent = new ArrayList<>();
         fileContent.add(headerLine);
-        for(int i = 1; i < 5; i++) {
+        for (int i = 1; i < 5; i++) {
             fileContent.add(oneValidLineWithInvoiceNumber(i));
+        }
+        return fileContent;
+    }
+
+    public static List<String> multilineFileWith(int validLines, int repeatedLines) {
+        ArrayList<String> fileContent = new ArrayList<>();
+        fileContent.add(headerLine);
+        for(int i = 1; i <= validLines; i++) {
+            fileContent.add(oneValidLineWithInvoiceNumber(i));
+        }
+        for (int i = 1; i <= repeatedLines; i++) {
+            fileContent.add(oneValidLineWithInvoiceNumber(validLines));
         }
         return fileContent;
     }
@@ -52,5 +64,4 @@ public class TestData {
     private static String oneValidLineWithInvoiceNumber(int invoiceNumber) {
         return invoiceNumber + ",02/05/2019,1000,1190,19,,ACER Laptop,B76430134,";
     }
-
 }
