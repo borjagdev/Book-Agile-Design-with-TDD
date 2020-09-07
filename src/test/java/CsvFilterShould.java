@@ -84,4 +84,22 @@ class CsvFilterShould {
         assertThat(result).isEqualTo(Arrays.asList(headerLine));
     }
 
+    @Test
+    void exclude_lines_with_both_id_fields_empty_as_one_is_required() {
+        String invoiceLine = "1,02/05/2019,1000,1190,19,,ACER Laptop,,";
+
+        List<String> result = CsvFilter.filter(Arrays.asList(headerLine, invoiceLine));
+
+        assertThat(result).isEqualTo(Arrays.asList(headerLine));
+    }
+
+    @Test
+    void exclude_lines_with_invalid_format_on_id_fields() {
+        String invoiceLine = "1,02/05/2019,1000,1190,19,,ACER Laptop,,invalid_nif";
+
+        List<String> result = CsvFilter.filter(Arrays.asList(headerLine, invoiceLine));
+
+        assertThat(result).isEqualTo(Arrays.asList(headerLine));
+    }
+
 }

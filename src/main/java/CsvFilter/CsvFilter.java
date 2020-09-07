@@ -24,7 +24,10 @@ public class CsvFilter {
         String netPriceField = invoiceElements[NET_PRICE_INDEX];
         String ivaField = invoiceElements[IVA_FIELD_INDEX];
         String igicField = invoiceElements[IGIC_FIELD_INDEX];
-        String cifField = invoiceElements[CIF_FIELD_INDEX];
+        String cifField = "";
+        if (cifFieldIsNotEmpty(invoiceElements)) {
+            cifField = invoiceElements[CIF_FIELD_INDEX];
+        }
         String nifField = "";
         if (nifFieldIsNotEmpty(invoiceElements)) {
             nifField = invoiceElements[NIF_FIELD_INDEX];
@@ -35,6 +38,9 @@ public class CsvFilter {
             filteredContent.add(originalContent.get(1));
         }
         return filteredContent;
+    }
+    private static boolean cifFieldIsNotEmpty(String[] invoiceElements) {
+        return invoiceElements.length >= CIF_FIELD_INDEX + 1;
     }
 
     private static boolean nifFieldIsNotEmpty(String[] invoiceElements) {
@@ -59,7 +65,10 @@ public class CsvFilter {
     }
 
     private static boolean idFieldsAreMutuallyExclusive(String cifField, String nifField) {
-        return (cifField.isEmpty() || nifField.isEmpty());
+        final String CIF_REGEX = "^[a-zA-Z]{1}\\d{7}[a-zA-Z0-9]{1}$";
+        final String NIF_REGEX = "^\\d{8}[a-zA-Z]{1}$";
+        return (cifField.isEmpty() || nifField.isEmpty()) &&
+                (cifField.matches(CIF_REGEX) || nifField.matches(NIF_REGEX));
     }
 
 }
