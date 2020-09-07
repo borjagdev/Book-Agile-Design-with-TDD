@@ -17,6 +17,9 @@ public class CsvFilter {
     }
 
     public static List<String> filter(List<String> originalContent) {
+        if (originalContent.size() < 2) {
+            throw new IllegalArgumentException("File must contain at least 2 lines: Header + List of invoices");
+        }
         List<String> filteredContent = new ArrayList<>();
         filteredContent.add(originalContent.get(0));
         String[] invoiceElements = originalContent.get(1).split(",");

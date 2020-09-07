@@ -1,17 +1,19 @@
 import CsvFilter.CsvFilter;
+import org.assertj.core.internal.bytebuddy.pool.TypePool;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /* TODO:
  - A file with a single invoice where everything is correct should output the same line - CHECKED
  - A file with a single invoice where IVA and IGIC (exclusive taxes) are filled should delete the line - CHECKED
  - A file with a single invoice where the net price is wrong calculated should delete the line - CHECKED
  - A file with a single invoice where CIF and NIF are filled should delete the line - CHECKED
- - A file with just 1 line is not valid because it has no header
+ - A file with just 1 line is not valid because it has no header -
  - If the invoice number is repeated, all the lines where it appears should be deleted
  - An empty or null list should output an empty list
 */
@@ -100,6 +102,16 @@ class CsvFilterShould {
         List<String> result = CsvFilter.filter(Arrays.asList(headerLine, invoiceLine));
 
         assertThat(result).isEqualTo(Arrays.asList(headerLine));
+    }
+
+    // Crear un value object InvoiceCsv con dos campos: String Header y String[] invoiceList
+    @Test
+    void not_allow_files_without_header() {
+        String invoiceLine = "1,02/05/2019,1000,1190,19,,ACER Laptop,B76430134,";
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            CsvFilter.filter(Arrays.asList(invoiceLine));
+        });
     }
 
 }
