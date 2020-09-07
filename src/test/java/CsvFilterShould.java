@@ -2,7 +2,6 @@ import CsvFilter.CsvFilter;
 import CsvFilter.HeaderNotPresentException;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,7 +14,7 @@ import static util.TestData.*;
  - A file with a single invoice where the net price is wrong calculated should delete the line - CHECKED
  - A file with a single invoice where CIF and NIF are filled should delete the line - CHECKED
  - A file with just 1 line is not valid because it has no header - CHECKED
- - If the invoice number is repeated, all the lines where it appears should be deleted
+ - If the invoice number is repeated, all the lines where it appears should be deleted -
  - An empty or null list should output an empty list
 */
 
@@ -23,7 +22,7 @@ class CsvFilterShould {
 
     @Test
     void allow_for_correct_lines_only() {
-        List<String> fileContent = oneCorrectLine();
+        List<String> fileContent = oneValidLine();
 
         List<String> result = CsvFilter.filter(fileContent);
 
@@ -109,6 +108,15 @@ class CsvFilterShould {
         assertThrows(HeaderNotPresentException.class, () -> {
             CsvFilter.filter(fileContent);
         });
+    }
+
+    @Test
+    void allow_more_than_one_correct_line() {
+        List<String> fileContent = multilineValidFile();
+
+        List<String> result = CsvFilter.filter(fileContent);
+
+        assertThat(result).isEqualTo(fileContent);
     }
 
 }

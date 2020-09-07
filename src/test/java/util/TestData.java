@@ -1,5 +1,6 @@
 package util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,7 +12,7 @@ public class TestData {
         return Arrays.asList(headerLine);
     }
 
-    public static List<String> oneCorrectLine() {
+    public static List<String> oneValidLine() {
         String invoiceLine = "1,02/05/2019,1000,1190,19,,ACER Laptop,B76430134,";
         return Arrays.asList(headerLine, invoiceLine);
     }
@@ -37,6 +38,19 @@ public class TestData {
         String invoiceLine = "1,02/05/2019,1000,1190,19,,ACER Laptop," +
                 cif + "," + nif;
         return Arrays.asList(headerLine, invoiceLine);
+    }
+
+    public static List<String> multilineValidFile() {
+        ArrayList<String> fileContent = new ArrayList<>();
+        fileContent.add(headerLine);
+        for(int i = 1; i < 5; i++) {
+            fileContent.add(oneValidLineWithInvoiceNumber(i));
+        }
+        return fileContent;
+    }
+
+    private static String oneValidLineWithInvoiceNumber(int invoiceNumber) {
+        return invoiceNumber + ",02/05/2019,1000,1190,19,,ACER Laptop,B76430134,";
     }
 
 }

@@ -22,24 +22,26 @@ public class CsvFilter {
         }
         List<String> filteredContent = new ArrayList<>();
         filteredContent.add(originalContent.get(0));
-        String[] invoiceElements = originalContent.get(1).split(",");
-        if (invoiceHasEnoughPopulatedFields(invoiceElements)) {
-            String listPriceField = invoiceElements[LIST_PRICE_FIELD_INDEX];
-            String netPriceField = invoiceElements[NET_PRICE_INDEX];
-            String ivaField = invoiceElements[IVA_FIELD_INDEX];
-            String igicField = invoiceElements[IGIC_FIELD_INDEX];
-            String cifField = "";
-            if (cifFieldIsNotEmpty(invoiceElements)) {
-                cifField = invoiceElements[CIF_FIELD_INDEX];
-            }
-            String nifField = "";
-            if (nifFieldIsNotEmpty(invoiceElements)) {
-                nifField = invoiceElements[NIF_FIELD_INDEX];
-            }
-            if (taxFieldsAreMutuallyExclusive(ivaField, igicField) &&
-                    netPriceIsCorrect(listPriceField, netPriceField, getAppliedTax(ivaField, igicField)) &&
-                    idFieldsAreMutuallyExclusive(cifField, nifField)) {
-                filteredContent.add(originalContent.get(1));
+        for (int i = 1; i < originalContent.size(); i++) {
+            String[] invoiceElements = originalContent.get(i).split(",");
+            if (invoiceHasEnoughPopulatedFields(invoiceElements)) {
+                String listPriceField = invoiceElements[LIST_PRICE_FIELD_INDEX];
+                String netPriceField = invoiceElements[NET_PRICE_INDEX];
+                String ivaField = invoiceElements[IVA_FIELD_INDEX];
+                String igicField = invoiceElements[IGIC_FIELD_INDEX];
+                String cifField = "";
+                if (cifFieldIsNotEmpty(invoiceElements)) {
+                    cifField = invoiceElements[CIF_FIELD_INDEX];
+                }
+                String nifField = "";
+                if (nifFieldIsNotEmpty(invoiceElements)) {
+                    nifField = invoiceElements[NIF_FIELD_INDEX];
+                }
+                if (taxFieldsAreMutuallyExclusive(ivaField, igicField) &&
+                        netPriceIsCorrect(listPriceField, netPriceField, getAppliedTax(ivaField, igicField)) &&
+                        idFieldsAreMutuallyExclusive(cifField, nifField)) {
+                    filteredContent.add(originalContent.get(i));
+                }
             }
         }
         return filteredContent;
