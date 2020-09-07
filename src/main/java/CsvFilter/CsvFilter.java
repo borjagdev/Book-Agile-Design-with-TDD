@@ -17,31 +17,43 @@ public class CsvFilter {
     }
 
     public static List<String> filter(List<String> originalContent) {
-        if (originalContent.size() < 2) {
-            throw new IllegalArgumentException("File must contain at least 2 lines: Header + List of invoices");
+        if (fileHeaderIsNotValid(originalContent)) {
+            throw new HeaderNotPresentException("Invalid file header");
         }
         List<String> filteredContent = new ArrayList<>();
         filteredContent.add(originalContent.get(0));
         String[] invoiceElements = originalContent.get(1).split(",");
-        String listPriceField = invoiceElements[LIST_PRICE_FIELD_INDEX];
-        String netPriceField = invoiceElements[NET_PRICE_INDEX];
-        String ivaField = invoiceElements[IVA_FIELD_INDEX];
-        String igicField = invoiceElements[IGIC_FIELD_INDEX];
-        String cifField = "";
-        if (cifFieldIsNotEmpty(invoiceElements)) {
-            cifField = invoiceElements[CIF_FIELD_INDEX];
-        }
-        String nifField = "";
-        if (nifFieldIsNotEmpty(invoiceElements)) {
-            nifField = invoiceElements[NIF_FIELD_INDEX];
-        }
-        if (taxFieldsAreMutuallyExclusive(ivaField, igicField) &&
-                netPriceIsCorrect(listPriceField, netPriceField, getAppliedTax(ivaField, igicField)) &&
-                idFieldsAreMutuallyExclusive(cifField, nifField)) {
-            filteredContent.add(originalContent.get(1));
+        if (invoiceHasEnoughPopulatedFields(invoiceElements)) {
+            String listPriceField = invoiceElements[LIST_PRICE_FIELD_INDEX];
+            String netPriceField = invoiceElements[NET_PRICE_INDEX];
+            String ivaField = invoiceElements[IVA_FIELD_INDEX];
+            String igicField = invoiceElements[IGIC_FIELD_INDEX];
+            String cifField = "";
+            if (cifFieldIsNotEmpty(invoiceElements)) {
+                cifField = invoiceElements[CIF_FIELD_INDEX];
+            }
+            String nifField = "";
+            if (nifFieldIsNotEmpty(invoiceElements)) {
+                nifField = invoiceElements[NIF_FIELD_INDEX];
+            }
+            if (taxFieldsAreMutuallyExclusive(ivaField, igicField) &&
+                    netPriceIsCorrect(listPriceField, netPriceField, getAppliedTax(ivaField, igicField)) &&
+                    idFieldsAreMutuallyExclusive(cifField, nifField)) {
+                filteredContent.add(originalContent.get(1));
+            }
         }
         return filteredContent;
     }
+
+    private static boolean fileHeaderIsNotValid(List<String> originalContent) {
+        final String HEADER_FORMAT = "Num_factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
+        return (originalContent.size() < 2) || (!originalContent.get(0).equals(HEADER_FORMAT));
+    }
+
+    private static boolean invoiceHasEnoughPopulatedFields(String[] invoiceElements) {
+        return invoiceElements.length >= 7;
+    }
+
     private static boolean cifFieldIsNotEmpty(String[] invoiceElements) {
         return invoiceElements.length >= CIF_FIELD_INDEX + 1;
     }
