@@ -18,6 +18,9 @@ public class CsvFilter {
     }
 
     public static List<String> filter(List<String> originalContent) {
+        if (originalContent == null || originalContent.isEmpty()){
+            return originalContent;
+        }
         if (fileHeaderIsNotValid(originalContent)) {
             throw new HeaderNotPresentException("Invalid file header");
         }
@@ -40,7 +43,7 @@ public class CsvFilter {
                 if (nifFieldIsNotEmpty(invoiceElements)) {
                     nifField = invoiceElements[NIF_FIELD_INDEX];
                 }
-                if (!usedInvoiceNumbers.contains(invoiceNumberField) &&
+                if (invoiceNumberIsNotRepeated(usedInvoiceNumbers, invoiceNumberField) &&
                         taxFieldsAreMutuallyExclusive(ivaField, igicField) &&
                         netPriceIsCorrect(listPriceField, netPriceField, getAppliedTax(ivaField, igicField)) &&
                         idFieldsAreMutuallyExclusive(cifField, nifField)) {
@@ -54,7 +57,7 @@ public class CsvFilter {
 
     private static boolean fileHeaderIsNotValid(List<String> originalContent) {
         final String HEADER_FORMAT = "Num_factura, Fecha, Bruto, Neto, IVA, IGIC, Concepto, CIF_cliente, NIF_cliente";
-        return (originalContent.size() < 2) || (!originalContent.get(0).equals(HEADER_FORMAT));
+        return !originalContent.get(0).equals(HEADER_FORMAT);
     }
 
     private static boolean invoiceHasEnoughPopulatedFields(String[] invoiceElements) {
@@ -67,6 +70,10 @@ public class CsvFilter {
 
     private static boolean nifFieldIsNotEmpty(String[] invoiceElements) {
         return invoiceElements.length == NIF_FIELD_INDEX + 1;
+    }
+
+    private static boolean invoiceNumberIsNotRepeated(List<String> usedInvoiceNumbers, String invoiceNumber) {
+        return !usedInvoiceNumbers.contains(invoiceNumber);
     }
 
     private static boolean taxFieldsAreMutuallyExclusive(String ivaField, String igicField) {

@@ -14,8 +14,8 @@ import static util.TestData.*;
  - A file with a single invoice where the net price is wrong calculated should delete the line - CHECKED
  - A file with a single invoice where CIF and NIF are filled should delete the line - CHECKED
  - A file with just 1 line is not valid because it has no header - CHECKED
- - If the invoice number is repeated, all the lines where it appears should be deleted -
- - An empty or null list should output an empty list
+ - If the invoice number is repeated, all the lines where it appears should be deleted - CHECKED
+ - An empty or null list should output an empty list - CHECKED
 */
 
 class CsvFilterShould {
@@ -128,6 +128,13 @@ class CsvFilterShould {
         List<String> result = CsvFilter.filter(fileContent);
 
         assertThat(result.size()).isEqualTo(1 + numberOfValidLines);
+    }
+
+    @Test
+    void return_a_received_empty_or_null_list() {
+        List<String> result = CsvFilter.filter(null);
+
+        assertThat(result).isNull();
     }
 
 }
